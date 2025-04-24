@@ -7,16 +7,29 @@
     <title>Burt Lockbuster</title>
     <link rel="stylesheet" href="style.css">
     <script defer=true src="site.js"></script>
+    <script defer=true src="code.js"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Trigger/Open The Modal -->
-<button id="Start">Start</button>
-<button id="LaunchMediaPlayer">Media Player</button>
 
-<!-- Start Modal -->
+<div id="code" class="modal">
+    <div class="modal-content" data-type="input">
+        <div class="header">
+            <h1>Enter Code</h1>
+        </div>
+        <div class="content">
+            <p>Enter the code to start the challenge:</p>
+            <input placeholder="Enter the code here" id="code-input">
+        </div>
+        <div class="footer">
+             <button id="code-submit">Submit</button>
+        </div>
+    </div>
+</div>
+
 <div id="StartDialog" class="modal">
   <div class="modal-content" data-type="dialog">
     <div class="header">
@@ -32,28 +45,17 @@
   </div>
 </div>
 
-<!-- Media Player -->
- <div id="MediaPlayer" class="modal">
+<div id="MediaPlayer" class="modal">
     <div class="modal-content" data-type="player">
         <div class="header">
             <h1>Media Player</h1><span class="close">&times;</span>
         </div>
         <div class="content" id="video-content">
             
-        <video class="video" id="scarface_question"> 
-            <source src="video/001_scarface_question.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+          <video class="video" id="mainVideo"> 
+       
+             
           </video>
-        
-        <video class="video" id="scarface_solution"> 
-            <source src="video/001_scarface_solution.mp4"  type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-
-        <!-- <video class="video" id="theshining_question"> 
-            <source src="video/002_the-shining_question.mp4"  type="video/mp4">
-            Your browser does not support the video tag.
-          </video> -->
         
         </div>
         <div class="footer">
@@ -63,7 +65,6 @@
     </div>
 </div>
 
-<!-- Input Dialog -->
 <div id="InputDialog" class="modal">
     <div class="modal-content" data-type="input">
       <div class="header"><h1>What is the famous movie quote?</h1>
@@ -75,6 +76,18 @@
         <div class="footer"></div>
     </div>
   </div>
+
+<div id="result" class="modal">
+     <div class="modal-content" data-type="dialog">
+        <div class="header">
+            <h1>Success!</h1>
+        </div>
+        <div class="content">
+            <h2>You did it! Check Durks BlockLuster computer for your next hint! Your code is "Hennie!"</h2>
+        </div>
+        <div class="footer"></div>
+    </div>
+</div>
 
 <!-- 
         .container {
@@ -112,5 +125,6 @@
             MUHAHAHA!!!</p></div>
         <div class="buttons"><button>OK</button><button>Cancel</button></div>
     </div> 
-    -->    
-            
+    -->
+</body>
+</html>

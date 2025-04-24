@@ -4,6 +4,7 @@ body{
   margin: 0;
   height: 100%;
   overflow: hidden;
+  font-size: 16px; /* Set a base font size for easier rem calculations */
 }
 @font-face {
     font-family: "Jersey 10", sans-serif;
@@ -19,7 +20,7 @@ body{
 h1{
   color: white;
   font-family: "Jersey 10";
-  font-size: 24px;
+  font-size: 1.5rem; /* Use rem for scalable font size */
   letter-spacing: 1px;
   line-height: 0%;
 }
@@ -27,7 +28,7 @@ h1{
 p{
   margin:0;
   color: black;
-  font-size: 24px;
+  font-size: 1.5rem; /* Use rem for scalable font size */
   letter-spacing: 1px;
 }
 
@@ -46,7 +47,8 @@ input{
   border-top: black; border-left: black; 
   border-bottom: white; border-right: white; 
   border-width: 2px; border-style: solid;
-  font-family: "Jersey 10"; font-size: 24px;
+  font-family: "Jersey 10"; 
+  font-size: 1.5rem; /* Use rem for scalable font size */
   outline: 2px solid #808080; outline-offset: -4px;
   padding-left: 4px; padding-right: 4px;
 }
@@ -55,7 +57,7 @@ button {
   background-color: #c0c0c0;
   color: black;
   font-family: "Jersey 10";
-  font-size: 24px;
+  font-size: 1.5rem; /* Use rem for scalable font size */
   letter-spacing: 1px;
   border-top: white;
   border-bottom: black;
@@ -66,10 +68,6 @@ button {
   outline: 2px solid #afafaf;
   outline-offset: -4px;
   min-width: 104px;
-  /* padding-left: 24px;
-  padding-right: 24px;
-  margin-left: 16px;
-  margin-top: 12px; */
   cursor: pointer;
 }
 button:active {
@@ -77,7 +75,7 @@ button:active {
 }
 
 .modal {
-  display: grid;
+  display: none; 
   grid-template-areas:
   "header"
   "content"
@@ -92,9 +90,14 @@ button:active {
   margin-left: auto; margin-right: auto;
 }
 
+
+.modal.--show {
+    display: grid;
+}
+
 .modal-content {
   background-color: #c0c0c0;
-  margin:1% auto; /* 15% from the top and centered */
+  margin: 5% auto; /* Adjust vertical margin */
   padding: 8px;
   border-top: 2px solid #fff;
   border-bottom: 2px solid #000;
@@ -102,7 +105,8 @@ button:active {
   border-right: 2px solid #000;
   outline: 2px solid #808080;
   outline-offset: -4px;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 90%; 
+  max-width: 800px; /* Prevent it from getting too wide */
 }
 .modal-content > div.header {
   background-color: #000080;
@@ -183,10 +187,12 @@ button:active {
 
 .modal-content[data-type="dialog"] {
   margin: 15% auto;
+  max-width: 600px; 
 }
 .modal-content[data-type="input"] {
   margin: 20% auto;
-  width: 50%;
+  width: 80%; 
+  max-width: 500px;
 }
 .modal-content[data-type="dialog"] > div.footer {
   align-items: flex-end;
@@ -206,6 +212,60 @@ button:active {
   justify-content: flex-end;
 }
 
-#scarface_solution{
-  display: none;
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
+  h1, p, input, button {
+    font-size: 1.25rem; /* Slightly smaller font size on smaller screens */
+  }
+
+  .modal-content {
+    width: 95%; /* Use more screen width */
+    margin: 5% auto;
+  }
+
+  .modal-content[data-type="dialog"] {
+    margin: 10% auto; /* Reduce top margin */
+  }
+  .modal-content[data-type="input"] {
+    margin: 15% auto; /* Reduce top margin */
+    width: 90%;
+  }
+
+  .footer {
+    gap: 0.5rem; /* Reduce gap between buttons */
+    padding-top: 0.5rem;
+  }
+
+  button {
+    min-width: 80px; /* Allow buttons to be smaller */
+  }
+
+  .close, .playbtn, .mute {
+    width: 28px; /* Slightly smaller control buttons */
+    height: 28px;
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1, p, input, button {
+    font-size: 1.1rem; /* Even smaller font size */
+  }
+
+  .modal-content > div.header h1 {
+     max-width: calc(100% - 40px); 
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+  }
+
+  .footer {
+    /* Stack buttons vertically if needed */
+  }
+
+  button {
+    min-width: 70px; 
+    padding-left: 10px; 
+    padding-right: 10px;
+  }
 }

@@ -1,109 +1,124 @@
-// Get the modal
 const StartDialog = document.getElementById("StartDialog");
 const MediaPlayer = document.getElementById("MediaPlayer");
 const InputDialog = document.getElementById("InputDialog");
 
-// Get the button that opens the modal
-const Start = document.getElementById("Start");
-const Launch = document.getElementById("LaunchMediaPlayer");
-
-// Get the <span> element that closes the modal
-//const closeButtons = document.getElementsByClassName("close");
 const StartModalOK = document.getElementsByClassName("start-modal-proceed")[0];
 
-// Get the video and the play button
 const playbtn = document.getElementsByClassName("playbtn")[0];
-const video = document.getElementsByClassName("video")[0];
+const mainVideo = document.getElementById("mainVideo");
 const mute = document.getElementsByClassName("mute")[0];
 let muteicon = document.getElementsByClassName("muteicon")[0];
 let isPlaying = false;
 
-// Hide elements on start
-function onLoadFunctions() {
-  StartDialog.style.display = "none"; 
-  MediaPlayer.style.display = "none"; 
-  InputDialog.style.display = "none";
-}
-window.onload = onLoadFunctions;
+const videos = [
+  { 
+    questionSrc: "video/001_scarface_question.mp4", 
+    solutionSrc: "video/001_scarface_solution.mp4", 
+    answer: "say hello to my little friend" 
+  },
+  { 
+    questionSrc: "video/002_goldfinger_scene.mp4", 
+    solutionSrc: "video/001_goldfinger_solution.mp4", 
+    answer: "another answer" 
+  },
+   { 
+    questionSrc: "video/001_scarface_question.mp4", 
+    solutionSrc: "video/001_scarface_solution.mp4", 
+    answer: "third answer" 
+  },
+   { 
+    questionSrc: "video/001_scarface_question.mp4", 
+    solutionSrc: "video/001_scarface_solution.mp4", 
+    answer: "fourth answer" 
+  },
+   { 
+    questionSrc: "video/001_scarface_question.mp4", 
+    solutionSrc: "video/001_scarface_solution.mp4", 
+    answer: "fifth answer" 
+  }
+];
 
-// When the user clicks on the button, open the modal
-Start.onclick = function() {
-  StartDialog.style.display = "block";
-}
-Launch.onclick = function() {
-  StartDialog.style.display = "none"; // Ensure StartDialog is hidden when Launch is clicked
-  MediaPlayer.style.display = "grid"; // Show MediaPlayer
-  video.load(); // Ensure the video is loaded and ready
+let currentVideoIndex = 0;
+let isVideoPlayingQuestion = true;
+
+function loadVideo(index, isQuestion) {
+  if (index >= videos.length) {
+      console.warn("loadVideo called with index out of bounds:", index);
+      return;
+  }
+
+  isVideoPlayingQuestion = isQuestion;
+  const videoData = videos[index];
+  const src = isQuestion ? videoData.questionSrc : videoData.solutionSrc;
+
+  mainVideo.src = src;
+  mainVideo.load();
+  console.log(`Loading ${isQuestion ? 'question' : 'solution'} ${index + 1}: ${src}`);
 }
 
-// When the user clicks on the play button, start the video
+function startIntroduction() {
+    StartDialog.classList.add('--show');
+}
+
+StartModalOK.onclick = function() {
+  StartDialog.classList.remove('--show');
+  MediaPlayer.classList.add('--show');
+  currentVideoIndex = 0;
+  loadVideo(currentVideoIndex, true);
+}
+
 playbtn.onclick = function() {
-  video.play();
+  mainVideo.play();
 }
 mute.onclick = function() {
-  if (video.muted) {
-    video.muted = false;
+  if (mainVideo.muted) {
+    mainVideo.muted = false;
     muteicon.src = "img/sound.png";
   } else {
-    video.muted = true;
+    mainVideo.muted = true;
     muteicon.src = "img/mute.png";
   }
-  isPlaying = !isPlaying;
 }
 
-// When the user clicks on OK, close the modal
-StartModalOK.onclick = function() {
-  StartDialog.style.display = "none";
-}
-
-const closeButtons = document.getElementsByClassName("close");
+const closeButtons = document.querySelectorAll(".close");
 let errorsound = new Audio('./sound/error.mp3');
 for (let i = 0; i < closeButtons.length; i++) {
-  closeButtons[i].onclick = function () {
-    // Play the error sound
     errorsound.load();
     errorsound.play();
+}
+
+mainVideo.onended = function() {
+  if (isVideoPlayingQuestion) {
+    InputDialog.classList.add('--show');
+  } else {
+    currentVideoIndex++;
+    if (currentVideoIndex < videos.length) {
+      loadVideo(currentVideoIndex, true); 
+    } else {
+      console.log("End of quiz reached.");
+      MediaPlayer.classList.remove('--show');
+      InputDialog.classList.remove('--show');
+      if (window.GameConnector) {
+          window.GameConnector.triggerGameFinish();
+      } else {
+          console.error("GameConnector not found");
+      }
+    }
   }
-}
-
-video.onended = function() {
-  InputDialog.style.display = "grid";
-}
-
-// Question List
-const scarface_question = document.getElementById("scarface_question");
-const scarface_solution = document.getElementById("scarface_solution");
-const theshining_question = document.getElementById("theshining_question");
-const theshining_solution = document.getElementById("theshining_solution");
+};
 
 let answer = document.getElementById("answer");
-//if (video === (scarface_question)) {
-  answer.oninput = function() {
-    if (answer.value.replace(/[^\w\s]|_/g, "").toLowerCase() == "say hello to my little friend") {
-    InputDialog.style.display = "none";
-    answer.value = "";
-    scarface_question.style.display = "none";
-    scarface_solution.style.display = "block";
-    scarface_solution.play();
+
+answer.oninput = function() {
+  const correctAnswer = videos[currentVideoIndex].answer;
+  const userAnswer = answer.value.replace(/[^\w\s]|_/g, "").toLowerCase().trim();
+
+  if (userAnswer === correctAnswer) {
+    console.log("Correct answer!");
+    InputDialog.classList.remove('--show');
+    answer.value = ""; 
+    
+    loadVideo(currentVideoIndex, false); 
+    mainVideo.play(); 
   }
-}
-
-//let answer = document.getElementById("answer");
-//if answer.oninput = function() {
-//    if (answer.value.replace(/[^\w\s]|_/g, "").toLowerCase() === "say hello to my little friend") {
-//      InputDialog.style.display = "none";
-//      answer.value = "";
-//      scarface_question.style.display = "none";
-//      scarface_solution.style.display = "block";
-//      scarface_solution.play();
-//    }
-//  };
-
-// StartModalClose.onclick = function playSound() {
-//  var error = new Audio('error.m4a');
-//  error.playSound();
-//}
-
-// let af en toe veranderen
-// const nooit veranderen
-// var vaak veranderen
+};
